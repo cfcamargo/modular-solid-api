@@ -23,7 +23,7 @@ export async function registerProductsController(request: FastifyRequest, reply:
         })
 
     } catch(err) {
-        return reply.status(500).send
+        throw err
     }
 
     return reply.status(201).send()
