@@ -4,6 +4,7 @@ import { env } from "./env";
 import { appRoutes } from "./http/routes";
 import fastifyJwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
+import cors from '@fastify/cors'
 
 export const app = fastify()
 
@@ -19,6 +20,11 @@ app.register(fastifyJwt, {
 })
 
 app.register(fastifyCookie)
+
+app.register(cors, {
+    origin: '*', // Permite qualquer origem. Para produção, você deve especificar o domínio.
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+})
 
 app.register(appRoutes)
 
