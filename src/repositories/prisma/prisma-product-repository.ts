@@ -10,4 +10,14 @@ export class PrismaProductRepository implements ProductsRepository{
 
         return product
     } 
+
+    async fetchProductsPaginated(page:number, perPage: number) {
+        const products:Product[] = await prisma.product.findMany({
+            skip: (page -1) * perPage,
+            take: perPage
+        })
+
+
+        return products
+    }
 }

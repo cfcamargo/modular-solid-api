@@ -12,7 +12,8 @@ export class InMemoryUsersRepository implements UsersRepository{
             email: data.email,
             hashed_password : data.hashed_password,
             created_at: new Date(),
-            desactivated_at : null
+            desactivated_at : null,
+            role: 'DEFAULT'
         }
 
         this.items.push(user)
@@ -22,6 +23,16 @@ export class InMemoryUsersRepository implements UsersRepository{
 
     async findByEmail(email: string) {
         const user = this.items.find(item => item.email === email)
+
+        if(!user){
+            return null
+        }
+
+        return user
+    }
+
+    async findById(userId: string){
+        const user = this.items.find(item => item.id === userId)
 
         if(!user){
             return null

@@ -1,15 +1,19 @@
-import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
 import { RegisterUserUseCase } from './register-use-case'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, beforeEach } from 'vitest'
 import { compare } from 'bcryptjs'
 import { UseerAlreadyExistsError } from '../errors/user-already-exists-error'
-import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repositoru'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 
-describe('Register use case', () => {
+let inMemoryUsersRepository: InMemoryUsersRepository
+let registerUseCase: RegisterUserUseCase
+
+describe('Register user use case', () => {
+    beforeEach(() => {
+        inMemoryUsersRepository = new InMemoryUsersRepository()
+        registerUseCase = new RegisterUserUseCase(inMemoryUsersRepository)
+    })
+
     it('should hash user password upon registration', async() => {
-        const prismaUsersRepository = new InMemoryUsersRepository()
-        const registerUseCase = new RegisterUserUseCase(prismaUsersRepository)
-
         const { user } = await registerUseCase.handle({
             name: 'Jhon Doe',
             email: 'jhondoe@example.com',
@@ -22,9 +26,6 @@ describe('Register use case', () => {
     })
 
     it('it should not be able to register with same email twice', async() => {
-        const prismaUsersRepository = new InMemoryUsersRepository()
-        const registerUseCase = new RegisterUserUseCase(prismaUsersRepository)
-
         const email = 'jhondoe@example.com'
 
         await registerUseCase.handle({
