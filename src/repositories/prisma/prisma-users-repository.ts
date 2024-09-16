@@ -30,4 +30,25 @@ export class PrismaUsersRepository implements UsersRepository {
 
         return user
     }
+
+    async fetchUsersPaginated(page: number, perPage: number) {
+        // Busca os produtos paginados
+        const users: User[] = await prisma.user.findMany({
+            skip: (page - 1) * perPage,
+            take: perPage,
+        });
+
+        const usersWithoutPassword = users.map(user => {
+            const { hashed_password, ...userWithoutPassword } = user;
+            return userWithoutPassword;
+        });
+
+        // Conta o número total de produtos
+        const total = await prisma.user.count();
+
+        return {
+            users: usersWithoutPassword,
+            total,
+        };
+    }
 }

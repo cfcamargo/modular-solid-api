@@ -1,13 +1,29 @@
-import { ProductsRepository } from "@/repositories/products-repository"
 import { UsersRepository } from "@/repositories/users-repository"
-import { Product, User } from "@prisma/client"
+import { User } from "@prisma/client"
 
+export class FetchUsersUseCase {
+    constructor(private usersRepository: UsersRepository){}
 
-export class FetchProducsUseCase {
-    constructor(private userRepository: UsersRepository){}
+    async handle(page: number = 1, perPage: number = 10): Promise<{
+            users: Omit<User, 'hashed_password'>[],
+            total: number,
+            page: number,
+            perPage: number,
+            totalPages: number
+    }> {
+        if (page < 1) page = 1
+        if (perPage < 1) perPage = 10
+    
+        const { users, total } = await this.usersRepository.fetchUsersPaginated(page, perPage)
+    
+        const totalPages = Math.ceil(total / perPage)
 
-    async handle(page: number, perPage: number): Promise<User[]> {    
-        const users = await this.userRepository.fetchUsersPaginated(page, perPage)
-        return users
-    } 
+        return {
+            users,
+            total,
+            page,
+            perPage,
+            totalPages
+        }
+    }
 }
