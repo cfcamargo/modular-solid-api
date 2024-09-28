@@ -1,18 +1,18 @@
 import { PrismaClienteRepository } from "@/repositories/prisma/prisma-client-repository";
-import { PrismaProductRepository } from "@/repositories/prisma/prisma-product-repository";
 import { RegisterClientUseCase } from "@/use-cases/clients/register-client-use-case";
-import { RegisterProductUseCase } from "@/use-cases/products/register-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 export async function registerClientController(request: FastifyRequest, reply: FastifyReply) {
-    const registerProductSchema = z.object({
-        name : z.string().min(3),
-        fantasyName: z.string(),
+
+    const registerClientSchema = z.object({
+        type: z.enum(['pj', 'pf']),
+        name: z.string().min(3),
+        fantasyName: z.string().optional(),
         document: z.string(),
         rg_ie: z.number(),
         im: z.number().nullable(),
-        address:z.object({
+        address: z.object({
             street: z.string(),
             number: z.string(),
             neighborhood: z.string(),
@@ -21,12 +21,13 @@ export async function registerClientController(request: FastifyRequest, reply: F
             country: z.string(),
         }),
         contacts: z.array(z.object({
-            type: z.string(),
-            contact: z.string()
+            type: z.enum(['phone', 'email']),
+            contact: z.string(),
         }))
-    })
+    });
 
-    const { 
+    const {
+        type,
         name,
         fantasyName,
         document,
@@ -34,19 +35,26 @@ export async function registerClientController(request: FastifyRequest, reply: F
         im,
         address,
         contacts
-    } = registerProductSchema.parse(request.body)
+    } = registerClientSchema.parse(request.body);
 
-    try{
-        const clientsRepository = new PrismaClienteRepository()
-        const clientUseCase = new RegisterClientUseCase(clientsRepository)
+    try {
+        const clientsRepository = new PrismaClienteRepository();
+        const clientUseCase = new RegisterClientUseCase(clientsRepository);
 
-        clientUseCase.handle({
-            name, fantasyName,document,rg_ie, im, address, contacts
-        })
+        await clientUseCase.handle({
+            type,
+            name,
+            fantasyName,
+            document,
+            rg_ie,
+            im,
+            address,
+            contacts
+        });
 
-    } catch(err) {
-        throw err
+        return reply.status(201).send();
+    } catch (err) {
+        console.error(err);
+        return reply.status(500).send({ error: 'Erro ao registrar cliente' });
     }
-
-    return reply.status(201).send()
 }

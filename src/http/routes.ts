@@ -7,6 +7,7 @@ import { refreshController } from './controllers/auth/refresh-controller'
 import { logouController } from './controllers/auth/logout-controller'
 import { fetchProductsController } from './controllers/products/fetch-products-controller'
 import { fetchUsersController } from './controllers/users/fetch-users-controller'
+import { registerClientController } from './controllers/clients/register-client-controller'
 
 export async function appRoutes(app: FastifyInstance) {
     app.post('/sessions', authenticateController)
@@ -19,4 +20,6 @@ export async function appRoutes(app: FastifyInstance) {
 
     app.post('/products', registerProductsController )
     app.get('/products', fetchProductsController)
+
+    app.post('/clients', registerClientController)
 }

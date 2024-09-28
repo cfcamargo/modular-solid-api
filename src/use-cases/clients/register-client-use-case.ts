@@ -5,7 +5,7 @@ import { Prisma } from "@prisma/client";
 interface RegisterUseCaseRequest {
     type: 'pj' | 'pf',
     name: string,
-    fantasyName: string,
+    fantasyName?: string,
     document: string,
     rg_ie: number,
     im: number | null,
