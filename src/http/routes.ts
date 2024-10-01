@@ -12,9 +12,9 @@ import { verifyJWT } from './midlewares/verify-jwt'
 
 export async function appRoutes(app: FastifyInstance) {
     app.post('/sessions', authenticateController)
-    app.post('/logout', logouController)
+    app.post('/logout', { onRequest: [verifyJWT] } , logouController)
     app.patch('/token/refresh',refreshController)
-    app.get('/me', profile)
+    app.get('/me', { onRequest: [verifyJWT] }, profile)
     
     app.post('/users', registerUserController )
     app.get('/users', { onRequest: [verifyJWT] } , fetchUsersController)
