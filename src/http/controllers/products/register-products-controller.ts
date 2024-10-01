@@ -17,16 +17,20 @@ export async function registerProductsController(request: FastifyRequest, reply:
         const productRepository = new PrismaProductRepository()
         const productUseCase = new RegisterProductUseCase(productRepository)
 
-        productUseCase.handle({
+        const { product }  = await productUseCase.handle({
             name,
             brand,
             quantity,
             price
         })
 
+        console.log(product)
+
+        return reply.status(201).send({
+            product
+        })
+
     } catch(err) {
         throw err
     }
-
-    return reply.status(201).send()
 }
