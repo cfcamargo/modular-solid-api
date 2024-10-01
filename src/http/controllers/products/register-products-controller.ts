@@ -7,10 +7,11 @@ export async function registerProductsController(request: FastifyRequest, reply:
     const registerProductSchema = z.object({
         name : z.string().min(3),
         brand: z.string(),
-        quantity: z.number()
+        quantity: z.number(),
+        price: z.number()
     })
 
-    const { name, brand, quantity } = registerProductSchema.parse(request.body)
+    const { name, brand, quantity, price } = registerProductSchema.parse(request.body)
 
     try{
         const productRepository = new PrismaProductRepository()
@@ -19,7 +20,8 @@ export async function registerProductsController(request: FastifyRequest, reply:
         productUseCase.handle({
             name,
             brand,
-            quantity
+            quantity,
+            price
         })
 
     } catch(err) {

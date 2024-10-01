@@ -20,6 +20,7 @@ model Product {
   quantity        Int
   created_at      DateTime  @default(now())
   desactivated_at DateTime?
+  price           Float
 
   @@map("products")
 }

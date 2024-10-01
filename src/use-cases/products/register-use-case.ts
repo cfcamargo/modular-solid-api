@@ -4,7 +4,8 @@ import { Product } from "@prisma/client";
 interface RegisterUseCaseRequest {
     name: string,
     brand: string,
-    quantity: number
+    quantity: number,
+    price: number
 }
 
 interface RegisterUseCaseReponse {
@@ -14,11 +15,12 @@ interface RegisterUseCaseReponse {
 export class RegisterProductUseCase {
     constructor(private productRepository: ProductsRepository){}
 
-    async handle({name, brand, quantity}: RegisterUseCaseRequest): Promise<RegisterUseCaseReponse> {    
+    async handle({name, brand, quantity, price}: RegisterUseCaseRequest): Promise<RegisterUseCaseReponse> {    
         const product = await this.productRepository.create({
             name,
             brand,
-            quantity
+            quantity,
+            price
         })
 
         return {
