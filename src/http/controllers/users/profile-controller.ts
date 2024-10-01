@@ -1,5 +1,5 @@
 import { makeUsersCase } from "@/use-cases/factories/make-users-use-case";
-import { GetUserProfileUseCase } from "@/use-cases/users/get-user-profile-case";
+import { GetUserProfileUseCase } from "@/use-cases/users/get-user-profile-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export async function profile(request: FastifyRequest, reply: FastifyReply){

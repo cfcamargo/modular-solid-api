@@ -8,6 +8,7 @@ import { logouController } from './controllers/auth/logout-controller'
 import { fetchProductsController } from './controllers/products/fetch-products-controller'
 import { fetchUsersController } from './controllers/users/fetch-users-controller'
 import { registerClientController } from './controllers/clients/register-client-controller'
+import { verifyJWT } from './midlewares/verify-jwt'
 
 export async function appRoutes(app: FastifyInstance) {
     app.post('/sessions', authenticateController)
@@ -16,10 +17,10 @@ export async function appRoutes(app: FastifyInstance) {
     app.get('/me', profile)
     
     app.post('/users', registerUserController )
-    app.get('/users', fetchUsersController)
+    app.get('/users', { onRequest: [verifyJWT] } , fetchUsersController)
 
-    app.post('/products', registerProductsController )
-    app.get('/products', fetchProductsController)
+    app.post('/products',{ onRequest: [verifyJWT] }, registerProductsController)
+    app.get('/products', { onRequest: [verifyJWT] }, fetchProductsController)
 
-    app.post('/clients', registerClientController)
+    app.post('/clients', { onRequest: [verifyJWT] } , registerClientController)
 }
