@@ -16,6 +16,9 @@ export class PrismaProductRepository implements ProductsRepository {
         const products: Product[] = await prisma.product.findMany({
             skip: (page - 1) * perPage,
             take: perPage,
+            where: {
+                desactivated_at: null,
+            },
         });
 
         // Conta o número total de produtos
@@ -35,5 +38,28 @@ export class PrismaProductRepository implements ProductsRepository {
         })
 
         return product
+    }
+
+    async manageQuantity(id: string, quantity: number): Promise<Product> {
+        return await prisma.product.update({
+            where: { id },
+            data: { quantity }
+        })
+    }
+
+    async updateProduct(id: string, data: Prisma.ProductCreateInput) {
+        return await prisma.product.update({
+            where: { id },
+            data
+        })
+    }
+
+    async desactivateProduct(id: string) {
+        return await prisma.product.update({
+            where: { id },
+            data: {
+                desactivated_at: new Date(Date.now())
+            }
+        })
     }
 }

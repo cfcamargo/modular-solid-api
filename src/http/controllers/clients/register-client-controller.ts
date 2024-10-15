@@ -4,7 +4,6 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 export async function registerClientController(request: FastifyRequest, reply: FastifyReply) {
-
     const registerClientSchema = z.object({
         type: z.enum(['pj', 'pf']),
         name: z.string().min(3),
