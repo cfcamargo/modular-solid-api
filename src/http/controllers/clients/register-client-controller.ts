@@ -1,5 +1,6 @@
 import { PrismaClienteRepository } from "@/repositories/prisma/prisma-client-repository";
 import { RegisterClientUseCase } from "@/use-cases/clients/register-client-use-case";
+import { MakeClientsUseCase } from "@/use-cases/factories/make-clients-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -37,10 +38,9 @@ export async function registerClientController(request: FastifyRequest, reply: F
     } = registerClientSchema.parse(request.body);
 
     try {
-        const clientsRepository = new PrismaClienteRepository();
-        const clientUseCase = new RegisterClientUseCase(clientsRepository);
+        const { registerUseCase } = MakeClientsUseCase()
 
-        await clientUseCase.handle({
+        await registerUseCase.handle({
             type,
             name,
             fantasyName,

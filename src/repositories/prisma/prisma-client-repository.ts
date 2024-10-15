@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Client, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export class PrismaClienteRepository {
@@ -48,4 +48,21 @@ export class PrismaClienteRepository {
 			desactivated_at: client.desactivated_at,
 		}
     }
+
+	async fetchClientsPaginated(page: number, perPage: number) {
+        const clients: Client[] = await prisma.client.findMany({
+            skip: (page - 1) * perPage,
+            take: perPage,
+            where: {
+                desactivated_at: null,
+            },
+        });
+		
+        const total = await prisma.client.count();
+
+        return {
+            clients,
+            total,
+        };
+	}
 }

@@ -12,6 +12,7 @@ import { verifyJWT } from './midlewares/verify-jwt'
 import { fetchProductByIdController } from './controllers/products/fetch-product-controller'
 import { updateProductController } from './controllers/products/update-product-controller'
 import { desactivateProductController } from './controllers/products/desactivate-product-controller'
+import { fetchClientsController } from './controllers/clients/fetch-clients-controller'
 
 export async function appRoutes(app: FastifyInstance) {
     app.post('/sessions', authenticateController)
@@ -29,4 +30,5 @@ export async function appRoutes(app: FastifyInstance) {
     app.delete('/products/:id', { onRequest: [verifyJWT] }, desactivateProductController)
 
     app.post('/clients', { onRequest: [verifyJWT] } , registerClientController)
+    app.get('/clients', { onRequest: [verifyJWT] } , fetchClientsController)
 }
