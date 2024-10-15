@@ -13,6 +13,7 @@ import { fetchProductByIdController } from './controllers/products/fetch-product
 import { updateProductController } from './controllers/products/update-product-controller'
 import { desactivateProductController } from './controllers/products/desactivate-product-controller'
 import { fetchClientsController } from './controllers/clients/fetch-clients-controller'
+import { fetchClientController } from './controllers/clients/fetch-client-controller'
 
 export async function appRoutes(app: FastifyInstance) {
     app.post('/sessions', authenticateController)
@@ -31,4 +32,5 @@ export async function appRoutes(app: FastifyInstance) {
 
     app.post('/clients', { onRequest: [verifyJWT] } , registerClientController)
     app.get('/clients', { onRequest: [verifyJWT] } , fetchClientsController)
+    app.get('/clients/:id', { onRequest: [verifyJWT] } , fetchClientController)
 }

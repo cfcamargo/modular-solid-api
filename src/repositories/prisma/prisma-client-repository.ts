@@ -46,6 +46,8 @@ export class PrismaClienteRepository {
 			created_at: client.created_at,
 			updated_at: client.updated_at,
 			desactivated_at: client.desactivated_at,
+			address: client.address,
+			contacts: client.contacts
 		}
     }
 
